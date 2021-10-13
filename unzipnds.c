@@ -146,11 +146,13 @@ static const CentralFileHdr *locateFileWithCRC32InZip(const u32 crc32, FILE *zip
  * @return A CentralFileHdr of a file of the specified fileType or NULL if not found.
  */
 static const CentralFileHdr *locateFileTypeInZip(const char *fileTypes, FILE *zipFile) {
+	char *ext;
 	if ( seekCentralZipHeader(zipFile) == 0 ) {
 		while ( fillCentralZipHeader(&cenHead, zipFile) == 0 ) {
 			fread(zipFilename, 1, cenHead.fileNameLength, zipFile);
 			zipFilename[cenHead.fileNameLength] = 0;
-			if ( strstr(fileTypes, strrchr(zipFilename, '.')) ) {
+			ext = strrchr(zipFilename, '.');
+			if ( ext != NULL && strstr(fileTypes, ext) ) {
 				return &cenHead;
 			}
 			fseek(zipFile, cenHead.extraFieldLength + cenHead.fileCommentLength, SEEK_CUR);
