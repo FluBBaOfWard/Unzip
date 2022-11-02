@@ -5,28 +5,31 @@
 extern "C" {
 #endif
 
-/* PKZIP header definitions */
-#define ZIPMAG 0x4b50			/* Two-byte zip lead-in ("PK")*/
-#define CENREM 0x0201			/* Remaining two bytes in zip signature */
-#define CENSIG 0x02014b50		/* Full central signature */
-#define LOCREM 0x0403			/* Remaining two bytes in zip signature */
-#define LOCSIG 0x04034b50		/* Full local signature */
-#define ENDSIG 0x06054b50		/* Full end signature */
-#define ENDHEADLEN 22			/* End header length */
+// PKZIP header definitions
+#define ZIPMAG 0x4b50			// Two-byte zip lead-in ("PK")
+#define CENREM 0x0201			// Remaining two bytes in zip signature
+#define CENSIG 0x02014b50		// Full central signature
+#define LOCREM 0x0403			// Remaining two bytes in zip signature
+#define LOCSIG 0x04034b50		// Full local signature
+#define ENDSIG 0x06054b50		// Full end signature
+#define ENDHEADLEN 22			// End header length
 
-#define  CRPFLG 1				/*  bit for encrypted entry */
-#define  EXTFLG 8				/*  bit for extended local header */
+#define CRPFLG 1				// Bit for encrypted entry
+#define EXTFLG 8				// Bit for extended local header
 
-typedef struct pkzipCentralFile { /* CENTRAL */
-    u32 magic;					/* "P","K",0x01,0x02 */
+#define STORE 0					// Store "compression"
+#define DEFLATE 8				// Deflate compression
+
+typedef struct pkzipCentralFile { // CENTRAL
+    u32 magic;					// "P","K",0x01,0x02
     u16 versionMadeBy;
     u16 versionNeededToExtract;
     u16 generalPurposeBitFlag;
     u16 compressionMethod;
     u32 lastModDosDatetime;
     u32 crc32;
-    u32 cSize;                  /* Compressed size */
-    u32 ucSize;                 /* Uncompressed size */
+    u32 cSize;                  // Compressed size
+    u32 ucSize;                 // Uncopressed size
     u16 fileNameLength;
     u16 extraFieldLength;
     u16 fileCommentLength;
@@ -36,8 +39,8 @@ typedef struct pkzipCentralFile { /* CENTRAL */
     u32 relativeOffsetLocalHeader;
 } CentralFileHdr;
 
-typedef struct pkzipLocalFile { /* LOCAL */
-    u32 magic;					/* "P","K",0x03,0x04 */
+typedef struct pkzipLocalFile { // LOCAL
+    u32 magic;					// "P","K",0x03,0x04
     u16 versionNeededToExtract;
     u16 generalPurposeBitFlag;
     u16 compressionMethod;
@@ -49,8 +52,8 @@ typedef struct pkzipLocalFile { /* LOCAL */
     u16 extraFieldLength;
 } LocalFileHdr;
 
-typedef struct pkzipEndofCentralDir { /* CENTRAL END */
-    u32 magic;					/* "P","K",0x05,0x06 */
+typedef struct pkzipEndofCentralDir { // CENTRAL END
+    u32 magic;					// "P","K",0x05,0x06
     u16 diskNumber;
     u16 startDisk;
     u16 entryCount;
