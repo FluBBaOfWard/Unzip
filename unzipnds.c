@@ -63,7 +63,8 @@ static int fillCentralZipHeader(CentralFileHdr *hdr, FILE *zipFile) {
 	fread(&hdr->relativeOffsetLocalHeader, 1, sizeof(u32), zipFile);
 	if (hdr->magic == CENSIG) {
 		return 0;
-	} else {
+	}
+	else {
 		return -1;
 	}
 }
@@ -195,7 +196,6 @@ static int loadAndDecompressZip(void *dest, const CentralFileHdr *cfHdr, FILE *z
 		if (ucSize > maxSize) {
 			strlcpy(zipError, "File too large!", sizeof(zipError));
 			err = 1;
-			fclose(zipFile);
 			return err;
 		}
 		if (zipHead.compressionMethod == DEFLATE) {		// DEFLATE compression = 8.
@@ -207,7 +207,7 @@ static int loadAndDecompressZip(void *dest, const CentralFileHdr *cfHdr, FILE *z
 				free(src);
 				drawText("                              ", 11, 0);
 			}
-			else if ((cSize+0x10000) < maxSize){
+			else if ((cSize+0x10000) <= maxSize){
 				src = dest+(maxSize-cSize);
 				fseek(zipFile, zipHead.extraFieldLength + zipHead.fileNameLength, SEEK_CUR);
 				fread(src, 1, cSize, zipFile);
