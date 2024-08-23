@@ -198,9 +198,9 @@ static int loadAndDecompressZip(void *dest, const CentralFileHdr *cfHdr, FILE *z
 			err = 1;
 			return err;
 		}
+		fseek(zipFile, zipHead.extraFieldLength + zipHead.fileNameLength, SEEK_CUR);
 		if (zipHead.compressionMethod == DEFLATE) {		// DEFLATE compression = 8.
 			if ((src = malloc(cSize))) {
-				fseek(zipFile, zipHead.extraFieldLength + zipHead.fileNameLength, SEEK_CUR);
 				fread(src, 1, cSize, zipFile);
 				drawText("   Please wait, decompressing.", 11, 0);
 				puff(dest, (unsigned long *)&ucSize, src, (unsigned long *)&cSize);
@@ -209,7 +209,6 @@ static int loadAndDecompressZip(void *dest, const CentralFileHdr *cfHdr, FILE *z
 			}
 			else if ((cSize+0x10000) <= maxSize){
 				src = dest+(maxSize-cSize);
-				fseek(zipFile, zipHead.extraFieldLength + zipHead.fileNameLength, SEEK_CUR);
 				fread(src, 1, cSize, zipFile);
 				drawText("   Please wait, decompressing.", 11, 0);
 				puff(dest, (unsigned long *)&ucSize, src, (unsigned long *)&cSize);
@@ -221,8 +220,7 @@ static int loadAndDecompressZip(void *dest, const CentralFileHdr *cfHdr, FILE *z
 			}
 		}
 		else if (zipHead.compressionMethod == STORE) {		// STORE, no compression = 0.
-			fseek(zipFile, zipHead.extraFieldLength + zipHead.fileNameLength, SEEK_CUR);
-			fread(dest, 1, zipHead.ucSize, zipFile);
+			fread(dest, 1, ucSize, zipFile);
 		}
 		else {									// Only supports DEFLATE & STORE.
 			strlcpy(zipError, "Unsupported compression in zip.", sizeof(zipError));
