@@ -266,7 +266,7 @@ int loadFileInZip(void *dest, const char *zipName, const char *fileName, const i
 
 	if ((zipFile = fopen(zipName, "r"))) {
 		const CentralFileHdr *cfHdr = locateFileInZip(fileName, zipFile);
-		if ( cfHdr != NULL ) {
+		if (cfHdr != NULL) {
 			err = loadAndDecompressZip(dest, cfHdr, zipFile, maxSize);
 		}
 		else {
